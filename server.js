@@ -13,6 +13,7 @@ app.set('view engine' , 'pug') ;
 
 app.get('/' , (req , res) => {
 
+    // http://localhost:5000/
 
 res.send('hello everybody!!')
 
@@ -20,10 +21,11 @@ res.send('hello everybody!!')
 
 } )
 
-
+console.log(__dirname)
 
 app.get('/home' , (req , res) => {
 
+    // http://localhost:5000/home
 
 
 res.sendFile(__dirname+'/views/home.html')
@@ -59,9 +61,9 @@ var users = [
 {
     id: uuid.v4() ,
 
-   name: "Ali" , 
+    name: "Ali" , 
    
-   age :29
+    age :29
 
 
 },
@@ -78,8 +80,9 @@ var users = [
 
 app.get('/users' , (req,res) => {
 
+// http://localhost:5000/users
 
-res.status(200).send(users) 
+res.send(users) 
 
 
 
@@ -92,7 +95,7 @@ app.get('/users/:id' , (req,res) => {
 let user = users.filter ((el) =>  el.id === req.params.id ) 
 
 
-res.status(200).send(user)
+res.send(user)
 
 
 
@@ -100,10 +103,10 @@ res.status(200).send(user)
 })
 
 
-app.post('/addUser' , (req,res) => {
+app.post('/users' , (req,res) => {
 
 
-users = [...users , {id : uuid.v4() , name:"Ahmed" , age : 25}]
+users = [...users , {id:uuid.v4() , ...req.body}]
 
 
 res.send({msg : "user added" , users}) 
@@ -112,25 +115,77 @@ res.send({msg : "user added" , users})
 
 })
 
-app.put('/users/:userId' , (req,res) => {
 
-users =  users.map(el => el.id === req.params.userId  ? el = {id:uuid.v4() , name : "Hakim" , age:28} : el)
+app.put('/users/:userID' ,  (req,res) => {
 
+users = users.map (el => el.id === req.params.userID ? el = {...el , ...req.body} : el)
 
-res.send({msg: "user updated" , users})
+res.send({msg:"user Updated" , users})
 
-
-
-})
-
-app.delete('/users/:id' , (req,res) => {
+}  )
 
 
-users = users.filter (el => el.id !==  req.params.id)
+app.delete('/users/:userID' , (req , res) => {
+
+
+users = users.filter(el => el.id !== req.params.userID)
 
 res.send({msg:"user deleted" , users})
 
+
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app.put('/users/:userId' , (req,res) => {
+
+// users =  users.map(el => el.id === req.params.userId  ? el ={id:uuid.v4() , ...req.body}  : el)
+
+
+// res.send({msg: "user updated" , users})
+
+
+
+// })
+
+// app.delete('/users/:id' , (req,res) => {
+
+
+// users = users.filter (el => el.id !==  req.params.id)
+
+// res.send({msg:"user deleted" , users})
+
+// })
 
 
 
